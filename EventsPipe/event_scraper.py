@@ -14,11 +14,10 @@ url = "https://www.eventbriteapi.com/v3/events/search"
 
 # Private OAuth header
 pOAuth = os.getenv("PRIV_OAuth")
-privateOAuth = pOAuth
 
 # Header for OAuth
 headers = {
-  "Authorization": f"Bearer {privateOAuth}",
+  "Authorization": f"Bearer {pOAuth}",
   "Content-Type": "application/json",
 }
 

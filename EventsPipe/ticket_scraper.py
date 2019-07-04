@@ -13,11 +13,10 @@ from pipe.models import Event, Ticket
 
 # Private OAuth header
 pOAuth = os.getenv("PRIV_OAuth")
-privateOAuth = pOAuth
 
 # Header for OAuth
 headers = {
-  "Authorization": f"Bearer {privateOAuth}",
+  "Authorization": f"Bearer {pOAuth}",
   "Content-Type": "application/json",
 }
 
