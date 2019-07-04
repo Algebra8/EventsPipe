@@ -1,0 +1,6 @@
+1. Make Ticket model have event instead of event_id.
+
+2. Ticket __str__ method return tuple of price and
+    event name or event id.
+
+3.
