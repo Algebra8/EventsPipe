@@ -44,14 +44,14 @@ def populate_tickets_db(ticket_input, event_input):
     N_tickets_per_event = len(ticket_input)
     for i in range(N_tickets_per_event):
         ticket = Ticket()
+        cost = float(0)
+
         if 'cost' in ticket_input[i]:
-            ticket.ticket_cost = float(ticket_input[i]['cost']['major_value'])
-            ticket.event_id = event_input
-            ticket.save()
-        else:
-            ticket.ticket_cost = float(0)
-            ticket.event_id = event_input
-            ticket.save()
+            cost = float(ticket_input[i]['cost']['major_value'])
+
+        ticket.ticket_cost = cost
+        ticket.event_id = event_input
+        ticket.save()
 
     print("Tickets database populated with new ticket.")
 
