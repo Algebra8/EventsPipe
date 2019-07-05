@@ -19,15 +19,21 @@ def get_event_by_id(request, eventid):
     data = json.loads(ev.description)
     return JsonResponse(data)
 
-def get_events_by_cost(request, cost):
-    events_dict = dict()
-    # Tickets contain one or more events
-    tickets = Ticket.objects.filter(ticket_cost=float(cost))
-    events = [json.loads(t.event_id.description) for t in tickets]
-    # For multiple JSON responses, assign all required events to dict
-    N_events = len()  # number of events for given ticket cost
-    for i in range(N_events):
-        if i not in events_dict:
-            events_dict[i] = events[i]
+# def get_events_by_cost(request, cost):
+#     events_dict = dict()
+#     # Tickets contain one or more events
+#     tickets = Ticket.objects.filter(ticket_cost=float(cost))
+#     events = [json.loads(t.event_id.description) for t in tickets]
+#     # For multiple JSON responses, assign all required events to dict
+#     N_events = len()  # number of events for given ticket cost
+#     for i in range(N_events):
+#         if i not in events_dict:
+#             events_dict[i] = events[i]
+#
+#     return JsonResponse(events_dict)
 
-    return JsonResponse(events_dict)
+def get_all(request, event_name=None, eventid=None):
+    if event_name:
+        return HttpResponse(event_name)
+    elif event_id:
+        return HttpResponse(eventid)

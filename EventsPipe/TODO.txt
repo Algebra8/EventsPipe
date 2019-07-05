@@ -3,4 +3,6 @@
 2. Ticket __str__ method return tuple of price and
     event name or event id.
 
-3.
+3. Check for organization name
+
+4. Return event by start date
