@@ -20,14 +20,28 @@ headers = {
   "Content-Type": "application/json",
 }
 
+
 def get_tickets(url, headers):
+    """
+    Function that uses the given url and headers
+    to return a list of tickets per event. The url
+    will contain the event for the given list of tickets.
+    """
     print("Getting tickets...")
     response_json = requests.get(url, headers=headers).json()
     return response_json['ticket_classes']
 
 def populate_tickets_db(ticket_input, event_input):
-    N_tickets_per_event = len(ticket_input)
+    """
+    Function to populate the Ticket model using the
+    list of tickets and an Event object. The Event
+    object is a ForeignKey in the Ticket model.
+
+    `ticket_input`: List of tickets per event
+    `event_input`: Event object
+    """
     print("Populating Tickets database...")
+    N_tickets_per_event = len(ticket_input)
     for i in range(N_tickets_per_event):
         ticket = Ticket()
         if 'cost' in ticket_input[i]:
@@ -38,9 +52,15 @@ def populate_tickets_db(ticket_input, event_input):
             ticket.ticket_cost = float(0)
             ticket.event_id = event_input
             ticket.save()
+
     print("Tickets database populated with new ticket.")
 
 def scrape_tickets(events):
+    """
+    Function to scrape tickets from a list of Event objects.
+
+    `events`: List of Event objects
+    """
     print("Beginning Ticket scraping...")
     # For each event, use event_id to find ticket and event to populate db
     for event in events:
@@ -63,4 +83,5 @@ def scrape_tickets(events):
 if __name__ == '__main__':
     # Call Events object
     events = Event.objects.all()
+    # Scrape tickets and populate database
     scrape_tickets(events)
