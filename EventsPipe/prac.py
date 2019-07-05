@@ -38,3 +38,21 @@ tt
 
 # I could dump that specific entire sub-event into the
 # ticket object as I did with the events objects.
+
+
+organization_id = 25399112885
+url_org = f"https://www.eventbriteapi.com/v3/organizations/{organization_id}/roles/"
+org = requests.get(url_org, headers=headers)
+
+org
+
+
+url_event = "https://www.eventbriteapi.com/v3/events/search/"
+
+ev = requests.get(url_event, headers=headers)
+e = ev.json()
+e = e['events']
+
+# path("events/name/<str:event_name>", views.get_event_by_name, name="get_event_by_name"),
+# path("events/id/<int:eventid>", views.get_event_by_id, name="get_event_by_id"),
+# path("events/cost/<str:cost>", views.get_events_by_cost, name="get_events_by_cost"),
