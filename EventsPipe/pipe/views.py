@@ -69,7 +69,6 @@ def get_by_startdate(request, utc_startdate):
 @decorator_from_middleware(RequestValidation)
 def update_event(request, eventid):
     if request.method == 'POST':
-
         # Get event and convert JSON description to python dict
         event = Event.objects.get(event_id=eventid)
         event_dict = json.loads(event.description)
@@ -96,3 +95,18 @@ def update_event(request, eventid):
         return JsonResponse(json.loads(event.description))
 
     return HttpResponse("Didn't get it...")
+
+
+def request_validation(request_body, event_dict):
+    for key, val in request_body.items():
+        if key not in event_dict:
+            # Return 400 BAD REQUEST
+            status_code = 400
+            msg = "Server could not understand the request."
+            exp = "User is unauthorized to access this request. Make sure " \
+            + "x-auth header key is set to the required value."
+
+            return JsonResponse(
+                {'message': msg, 'explanation': exp},
+                status=status_code,
+            )
