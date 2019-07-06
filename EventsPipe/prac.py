@@ -12,3 +12,8 @@ print(type(dateparse.parse_datetime("2018-03-11")))
 
 
 '2019-07-06T02:00:00Z'
+a = 5
+a = {'a': 5, 'b': 10}
+for key, _ in a.items():
+    print(key)
+    

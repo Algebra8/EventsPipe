@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 from pipe.models import Event, Ticket
@@ -57,3 +58,35 @@ def get_by_startdate(request, utc_startdate):
             pass
 
     return JsonResponse(event_dict)
+
+
+@csrf_exempt
+def update_event(request, eventid):
+    if request.method == 'POST':
+
+        # Get event and convert JSON description to python dict
+        event = Event.objects.get(event_id=eventid)
+        event_dict = json.loads(event.description)
+
+        # Go through request and update event
+        if request.body:
+            body = json.loads(request.body)
+            for key, val in body.items():
+                event_dict[key] = val
+
+        # Update fields of Event object
+        event.name = event_dict['name']
+        event.event_id = event_dict['id']
+        event.start_date = parse_datetime(event_dict['start']['utc'])
+
+        # Convert object back to JSON and place in event
+        event.description = json.dumps(event_dict)
+
+
+        # Note django will automatically update
+        # the object if pk is an existing value
+        event.save()
+
+        return JsonResponse(json.loads(event.description))
+
+    return HttpResponse("Didn't get it...")
