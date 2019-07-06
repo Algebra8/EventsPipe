@@ -3,9 +3,13 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import decorator_from_middleware
+from .middleware.pipe.request_middleware import RequestValidation
+from .middleware.pipe.request_middleware import HeaderValidation
 import json
 
 from pipe.models import Event, Ticket
+
 
 def index(request):
     html = "<h1>goobye wordle</h1>"
@@ -61,6 +65,8 @@ def get_by_startdate(request, utc_startdate):
 
 
 @csrf_exempt
+@decorator_from_middleware(HeaderValidation)
+@decorator_from_middleware(RequestValidation)
 def update_event(request, eventid):
     if request.method == 'POST':
 
