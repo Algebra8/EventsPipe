@@ -2,18 +2,18 @@ from django.http import JsonResponse
 from pipe.models import Event
 import json
 
-class RequestValidation:
-    def process_view(self, request, view_func, view_args, view_kwargs):
-        if request.method == "POST":
-            # Get given event
-            
-            # e = Event.objects.get(event_id=view_kwargs)
-            # print(e.name)
-
-        else:
-            print('NOT POST')
-
-        return view_func(request, *view_args, **view_kwargs)
+# class RequestValidation:
+#     def process_view(self, request, view_func, view_args, view_kwargs):
+#         if request.method == "POST":
+#             # Get given event
+#
+#             # e = Event.objects.get(event_id=view_kwargs)
+#             # print(e.name)
+#
+#         else:
+#             print('NOT POST')
+#
+#         return view_func(request, *view_args, **view_kwargs)
 
 class HeaderValidation:
     def process_view(self, request, view_func, view_args, view_kwargs):
