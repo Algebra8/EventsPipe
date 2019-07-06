@@ -31,11 +31,6 @@ def get_events(url, headers):
     return response_json['events']
     print("Got events.")
 
-
-def parse_event_startdate(start_date: string):
-    return parse_datetime(start_date)
-
-
 def populate_events_db(events_input):
     print("Populating Events database...")
     for ev in events_input:
@@ -44,7 +39,7 @@ def populate_events_db(events_input):
         event.description = json.dumps(ev)
         event.name = ev['name']['text']
         event.event_id = ev['id']
-        event.start_date = parse_event_startdate(ev['start']['utc'])
+        event.start_date = parse_datetime(ev['start']['utc'])
         event.save()
 
     print("Events database populated with events.")

@@ -1,13 +1,15 @@
 from django.db import models
+from django.utils import timezone
 
 class Event(models.Model):
     description = models.TextField()
     name = models.CharField(max_length=550)
     event_id = models.IntegerField()
-    start_date = models.DateTimeField('start date')
+    start_date = models.DateTimeField('start date', default=timezone.now)
 
     def __str__(self):
         return self.name
+
 
 class Ticket(models.Model):
     ticket_cost = models.FloatField()
