@@ -1,13 +1,15 @@
-from django.shortcuts import render
+# Django tools
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.utils.dateparse import parse_datetime
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
 from django.utils.decorators import decorator_from_middleware
-from .middleware.pipe.request_middleware import RequestValidation
+# Middleware and validators
 from .middleware.pipe.request_middleware import HeaderValidation
+from .validators.pipe.views_validators import request_validation
 import json
-
+# Models
 from pipe.models import Event, Ticket
 
 
@@ -16,6 +18,7 @@ def index(request):
     return HttpResponse(html)
 
 
+@decorator_from_middleware(HeaderValidation)
 def get_event_by_name(request, event_name):
     ev = Event.objects.get(name=event_name)
     data = json.loads(ev.description)
@@ -23,6 +26,7 @@ def get_event_by_name(request, event_name):
     return JsonResponse(data)
 
 
+@decorator_from_middleware(HeaderValidation)
 def get_event_by_id(request, eventid):
     ev = Event.objects.get(event_id=int(eventid))
     data = json.loads(ev.description)
@@ -30,6 +34,7 @@ def get_event_by_id(request, eventid):
     return JsonResponse(data)
 
 
+@decorator_from_middleware(HeaderValidation)
 def get_events_by_cost(request, cost):
     events_dict = dict()
     # Tickets contain one or more events
@@ -44,6 +49,7 @@ def get_events_by_cost(request, cost):
     return JsonResponse(events_dict)
 
 
+@decorator_from_middleware(HeaderValidation)
 def get_by_startdate(request, utc_startdate):
     event_dict = {}
     parsed_sd = parse_datetime(utc_startdate)
@@ -66,16 +72,22 @@ def get_by_startdate(request, utc_startdate):
 
 @csrf_exempt
 @decorator_from_middleware(HeaderValidation)
-@decorator_from_middleware(RequestValidation)
 def update_event(request, eventid):
     if request.method == 'POST':
-        # Get event and convert JSON description to python dict
+        # Get Event and convert JSON description to python dict
         event = Event.objects.get(event_id=eventid)
         event_dict = json.loads(event.description)
 
         # Go through request and update event
         if request.body:
             body = json.loads(request.body)
+
+            # Check if JSON request is valid
+            not_valid = request_validation(body, event_dict)
+            if not_valid:
+                return not_valid
+
+            # Update Event JSON
             for key, val in body.items():
                 event_dict[key] = val
 
@@ -87,6 +99,11 @@ def update_event(request, eventid):
         # Convert object back to JSON and place in event
         event.description = json.dumps(event_dict)
 
+        # Validate request before saving
+        try:
+            event.full_clean()
+        except ValidationError as e:
+            return JsonResponse({'error': e.messages}, status=400)
 
         # Note django will automatically update
         # the object if pk is an existing value
@@ -94,19 +111,13 @@ def update_event(request, eventid):
 
         return JsonResponse(json.loads(event.description))
 
-    return HttpResponse("Didn't get it...")
 
+    msg = 'This endpoint is used for POST request and only accepts ' \
+        + 'JSON objects. If you are seeing then you either did not make a ' \
+        + 'POST request or forgot to send the POST in the body of the ' \
+        + 'request as a JSON object.'
 
-def request_validation(request_body, event_dict):
-    for key, val in request_body.items():
-        if key not in event_dict:
-            # Return 400 BAD REQUEST
-            status_code = 400
-            msg = "Server could not understand the request."
-            exp = "User is unauthorized to access this request. Make sure " \
-            + "x-auth header key is set to the required value."
-
-            return JsonResponse(
-                {'message': msg, 'explanation': exp},
-                status=status_code,
-            )
+    return JsonResponse({
+        'Error': "I'm a teapot",
+        'message': msg,
+    }, status=418)
