@@ -51,9 +51,11 @@ def get_events_list():
     events_dict = dict()
     events = Event.objects.all()
     event_descr = [json.loads(e.description) for e in events]
-    for i in range(len(event_descr)):
-        if i not in events_dict:
-            events_dict[i] = event_descr[i]
+
+    # Convert list of events to dictionary
+    N_events = len(event_descr)
+    events_dict = events_list_to_dict(N_events, event_descr)
+
     return events_dict
 
 def get_event_by_name(event_name):
@@ -93,15 +95,12 @@ def get_by_startdate(utc_startdate):
     """
     events_by_sd = Event.objects.filter(start_date=parsed_sd)
     events = [json.loads(e.description) for e in events_by_sd]
-    N_events = len(events)
-    for i in range(N_events):
-        if i not in event_dict:
-            event_dict[i] = events[i]
-        else:
-            # Unique indices, won't get here
-            pass
 
-    return event_dict
+    # Convert event descriptions to python dict
+    N_events = len(events)
+    events_dict = events_list_to_dict(N_events, events)
+
+    return events_dict
 
 
 @csrf_exempt
@@ -162,3 +161,14 @@ def convert_string_to_timezone(date):
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
     # Convert and return datetime to datetime with timezone
     return timezone.make_aware(date)
+
+def events_list_to_dict(N_events, events_list):
+    events_dict = dict()
+    for i in range(N_events):
+        if i not in events_dict:
+            events_dict[i] = events_list[i]
+        else:
+            # Unique indices, won't get here
+            pass
+
+    return events_dict
