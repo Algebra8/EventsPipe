@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='name',
-            field=models.CharField(max_length=550, validators=[pipe.validators.pipe.events_validators.validate_name]),
+            field=models.CharField(max_length=550),
         ),
         migrations.AlterField(
             model_name='event',
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ticket',
             name='event_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='pipe.Event', validators=[pipe.validators.pipe.tickets_validators.validate_event_id]),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='pipe.Event'),
         ),
         migrations.AlterField(
             model_name='ticket',

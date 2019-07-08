@@ -23,10 +23,3 @@ def validate_startdate(value):
             )
     else:
         return
-
-def validate_name(value):
-    if type(value) != str:
-        raise ValidationError(
-            _('%(value)s is not a string'),
-            params={'value': value},
-        )

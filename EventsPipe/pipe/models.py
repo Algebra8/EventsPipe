@@ -8,14 +8,12 @@ class Event(models.Model):
     description = models.TextField(blank=False)
     name = models.CharField(
         max_length=550,
-        validators=[events_validators.validate_name],
         blank=False,
     )
     event_id = models.IntegerField(
         validators=[
             events_validators.validate_id,
             MinValueValidator(0),
-            MaxValueValidator(100000),
         ],
         blank=False,
     )
@@ -42,7 +40,6 @@ class Ticket(models.Model):
         'Event',
         on_delete=models.CASCADE,
         blank=False,
-        validators=[tickets_validators.validate_event_id,]
     )
 
     def __str__(self):

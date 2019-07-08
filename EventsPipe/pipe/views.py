@@ -1,7 +1,6 @@
 # Django tools
 from django.http import HttpResponse
 from django.http import JsonResponse
-from django.utils.dateparse import parse_datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.utils.decorators import decorator_from_middleware
@@ -9,6 +8,7 @@ from django.utils.decorators import decorator_from_middleware
 from .middleware.pipe.request_middleware import HeaderValidation
 from .validators.pipe.views_validators import request_validation
 import json
+import datetime
 # Models
 from pipe.models import Event, Ticket
 
@@ -94,7 +94,7 @@ def update_event(request, eventid):
         # Update fields of Event object
         event.name = event_dict['name']
         event.event_id = event_dict['id']
-        event.start_date = parse_datetime(event_dict['start']['utc'])
+        event.start_date = convert_string_to_timezone(event_dict['start']['utc'])
 
         # Convert object back to JSON and place in event
         event.description = json.dumps(event_dict)
@@ -113,11 +113,18 @@ def update_event(request, eventid):
 
 
     msg = 'This endpoint is used for POST request and only accepts ' \
-        + 'JSON objects. If you are seeing then you either did not make a ' \
-        + 'POST request or forgot to send the POST in the body of the ' \
-        + 'request as a JSON object.'
+        + 'JSON objects. If you are seeing this error, then you either ' \
+        + 'did not make a POST request or forgot to send the POST in the ' \
+        + 'body of the request as a JSON object.'
 
     return JsonResponse({
         'Error': "I'm a teapot",
         'message': msg,
     }, status=418)
+
+
+def convert_string_to_timezone(date):
+    # Convert string to datetime based on %Y-%m-%d
+    date = datetime.datetime.strptime(date, '%Y-%m-%d')
+    # Convert and return datetime to datetime with timezone
+    return timezone.make_aware(date)
