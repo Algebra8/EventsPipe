@@ -1,22 +1,28 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from catalog.models import Author
+from pipe.models import Event, Ticket
 
-class AuthorListViewTest(TestCase):
+class PipeViewGETTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        # Create 13 authors for pagination tests
-        number_of_authors = 13
+        # Create an Event and a Ticket
+        Event.objects.create(
+            description = "Test Description",
+            name = "Test Name",
+            event_id = "123",
+            start_date = timezone.now(),
+        )
 
-        for author_id in range(number_of_authors):
-            Author.objects.create(
-                first_name=f'Christian {author_id}',
-                last_name=f'Surname {author_id}',
-            )
+        event = Event.objects.get(name="Test Name")
+        Ticket.objects.create(
+            ticket_cost = 1.0,
+            event_id = event,
+        )
 
-    def test_view_url_exists_at_desired_location(self):
-        response = self.client.get('/catalog/authors/')
+
+    def test_GET_name_view(self):
+        response = self.client.get('/pipe/authors/')
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
