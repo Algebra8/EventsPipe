@@ -17,25 +17,54 @@ def index(request):
     html = "<h1>goobye wordle</h1>"
     return HttpResponse(html)
 
+def get_event(request):
+    pass
 
-@decorator_from_middleware(HeaderValidation)
-def get_event_by_name(request, event_name):
+def dun(request):
+    print('+++++++++++++++++++++++++++++')
+    q = request.GET.dict()
+
+    if not q:
+        return HttpResponse('List of all available events...')
+
+    if len(q) > 1:
+        msg = "Please query by event_name, start_date, ticket_cost or " \
+            + "none of the above."
+        return HttpResponse(msg)
+
+    try:
+        if q['event_name']:
+            return JsonResponse(get_event_by_name(q['event_name']))
+
+        elif q['start_date']:
+            return HttpResponse(q['start_date'])
+
+        elif q['ticket_cost']:
+            return HttpResponse(q['ticket_cost'])
+
+    except:
+        return HttpResponse("No keys matched.")
+
+
+    print('+++++++++++++++++++++++++++++')
+    return HttpResponse("check console")
+
+
+def get_event_by_name(event_name):
     ev = Event.objects.get(name=event_name)
     data = json.loads(ev.description)
 
-    return JsonResponse(data)
+    return data
 
 
-@decorator_from_middleware(HeaderValidation)
-def get_event_by_id(request, eventid):
+def get_event_by_id(eventid):
     ev = Event.objects.get(event_id=int(eventid))
     data = json.loads(ev.description)
 
-    return JsonResponse(data)
+    return data
 
 
-@decorator_from_middleware(HeaderValidation)
-def get_events_by_cost(request, cost):
+def get_events_by_cost(cost):
     events_dict = dict()
     # Tickets contain one or more events
     tickets = Ticket.objects.filter(ticket_cost=float(cost))
@@ -46,10 +75,9 @@ def get_events_by_cost(request, cost):
         if i not in events_dict:
             events_dict[i] = events[i]
 
-    return JsonResponse(events_dict)
+    return events_dict
 
 
-@decorator_from_middleware(HeaderValidation)
 def get_by_startdate(request, utc_startdate):
     event_dict = {}
     parsed_sd = parse_datetime(utc_startdate)

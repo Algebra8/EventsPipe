@@ -43,3 +43,26 @@
 #             return HttpResponse("Not valid")
 #
 #     return HttpResponse("Didn't get it...")
+
+
+
+
+
+
+
+
+
+# Views
+
+# def get_event_by_name(request, event_name):
+#     ev = Event.objects.get(name=event_name)
+#     data = json.loads(ev.description)
+#
+#     return JsonResponse(data)
+
+
+# def get_event_by_id(request, eventid):
+#     ev = Event.objects.get(event_id=int(eventid))
+#     data = json.loads(ev.description)
+#
+#     return JsonResponse(data)
