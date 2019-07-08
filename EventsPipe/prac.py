@@ -66,3 +66,23 @@
 #     data = json.loads(ev.description)
 #
 #     return JsonResponse(data)
+
+
+# def get_by_startdate(request, utc_startdate):
+#     event_dict = {}
+#     parsed_sd = parse_datetime(utc_startdate)
+#     """
+#     `event` is a list containing all the different events for
+#     any single start date.
+#     """
+#     events_by_sd = Event.objects.filter(start_date=parsed_sd)
+#     events = [json.loads(e.description) for e in events_by_sd]
+#     N_events = len(events)
+#     for i in range(N_events):
+#         if i not in event_dict:
+#             event_dict[i] = events[i]
+#         else:
+#             # Unique indices, won't get here
+#             pass
+#
+#     return JsonResponse(event_dict)

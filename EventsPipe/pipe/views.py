@@ -18,37 +18,43 @@ def index(request):
     return HttpResponse(html)
 
 def get_event(request):
-    pass
+    if request.method == 'GET':
 
-def dun(request):
-    print('+++++++++++++++++++++++++++++')
-    q = request.GET.dict()
+        q = request.GET.dict()
+        err_msg = "Please query by event_name, start_date, ticket_cost or " \
+            + "none for a list of events."
 
-    if not q:
-        return HttpResponse('List of all available events...')
+        if not q:
+            # Return JSON of list of all Events
+            return JsonResponse(get_events_list())
 
-    if len(q) > 1:
-        msg = "Please query by event_name, start_date, ticket_cost or " \
-            + "none of the above."
-        return HttpResponse(msg)
+        if len(q) > 1:
+            return JsonResponse({'error': err_msg}, status=400)
 
-    try:
-        if q['event_name']:
-            return JsonResponse(get_event_by_name(q['event_name']))
+        try:
+            if q['event_name']:
+                return JsonResponse(get_event_by_name(q['event_name']))
+            elif q['start_date']:
+                return JsonResponse(get_by_startdate(q['start_date']))
+            elif q['ticket_cost']:
+                return JsonResponse(get_events_by_cost(q['ticket_cost']))
 
-        elif q['start_date']:
-            return HttpResponse(q['start_date'])
+        except:
+            return JsonResponse({'error': err_msg}, status=400)
 
-        elif q['ticket_cost']:
-            return HttpResponse(q['ticket_cost'])
-
-    except:
-        return HttpResponse("No keys matched.")
+    return JsonResponse({
+        'error': 'This endpoint is for GET requests only'
+    }, status=404)
 
 
-    print('+++++++++++++++++++++++++++++')
-    return HttpResponse("check console")
-
+def get_events_list():
+    events_dict = dict()
+    events = Event.objects.all()
+    event_descr = [json.loads(e.description) for e in events]
+    for i in range(len(event_descr)):
+        if i not in events_dict:
+            events_dict[i] = event_descr[i]
+    return events_dict
 
 def get_event_by_name(event_name):
     ev = Event.objects.get(name=event_name)
@@ -78,7 +84,7 @@ def get_events_by_cost(cost):
     return events_dict
 
 
-def get_by_startdate(request, utc_startdate):
+def get_by_startdate(utc_startdate):
     event_dict = {}
     parsed_sd = parse_datetime(utc_startdate)
     """
@@ -95,7 +101,7 @@ def get_by_startdate(request, utc_startdate):
             # Unique indices, won't get here
             pass
 
-    return JsonResponse(event_dict)
+    return event_dict
 
 
 @csrf_exempt
