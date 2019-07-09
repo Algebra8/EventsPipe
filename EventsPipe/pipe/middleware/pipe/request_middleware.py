@@ -5,14 +5,23 @@ import json
 
 class HeaderValidation:
     def process_view(self, request, view_func, view_args, view_kwargs):
+        msg = "Unauthorized or Bad request."
+        exp = "User is unauthorized to access this request or  " \
+        + "has not provided a required header. Make sure " \
+        + "x-auth header key is set to the required value."
+
         if request.method == "POST":
-            if request.META['HTTP_X_AUTH'] != 'GENERIC_AUTH_KEY':
+            if not 'X-Auth' in request.headers:
+                # Return 400 BAD REQUEST
+                status_code = 400
+                return JsonResponse(
+                    {'message': msg, 'explanation': exp},
+                    status=status_code,
+                )
+
+            if request.headers['X-Auth'] != 'GENERIC_AUTH_KEY':
                 # Return 401 UNAUTHORIZED
                 status_code = 401
-                msg = "Unauthorized request."
-                exp = "User is unauthorized to access this request. Make sure " \
-                + "x-auth header key is set to the required value."
-
                 return JsonResponse(
                     {'message': msg, 'explanation': exp},
                     status=status_code,

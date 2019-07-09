@@ -54,15 +54,20 @@ def get_event(request):
 def update_event(request, eventid):
     if request.method == 'POST':
         # Get Event and convert JSON description to python dict
-        event = Event.objects.get(event_id=eventid)
-        event_dict = json.loads(event.description)
+        try:
+            event = Event.objects.get(event_id=eventid)
+
+        except Event.DoesNotExist:
+            msg = f'The given Event with id {eventid} does not exist.'
+            return JsonResponse({'error': msg}, status=404)
 
         # Go through request and update event
-        if request.body:
-            body = json.loads(request.body)
+        event_dict = json.loads(event.description)
+        body = json.loads(request.body)
 
+        if body:
             # Check if JSON request is valid
-            not_valid = utils.request_validation(body, event_dict)
+            not_valid = request_validation(body, event_dict)
             if not_valid:
                 return not_valid
 
@@ -70,27 +75,26 @@ def update_event(request, eventid):
             for key, val in body.items():
                 event_dict[key] = val
 
-        # Update fields of Event object
-        event.name = event_dict['name']
-        event.event_id = event_dict['id']
-        event.start_date = utils.convert_string_to_timezone(event_dict['start']['utc'])
+            # Update fields of Event object
+            event.name = event_dict['name']
+            event.event_id = event_dict['id']
+            event.start_date = event_dict['start']['utc']
+            # Convert object back to JSON and place in event
+            event.description = json.dumps(event_dict)
 
-        # Convert object back to JSON and place in event
-        event.description = json.dumps(event_dict)
+            # Validate request before saving
+            try:
+                event.full_clean()
+            except ValidationError as e:
+                return JsonResponse({'error': e.messages}, status=400)
 
-        # Validate request before saving
-        try:
-            event.full_clean()
-        except ValidationError as e:
-            return JsonResponse({'error': e.messages}, status=400)
+            # Note django will automatically update
+            # the object if pk is an existing value
+            event.save()
 
-        # Note django will automatically update
-        # the object if pk is an existing value
-        event.save()
+            return JsonResponse(json.loads(event.description))
 
-        return JsonResponse(json.loads(event.description))
-
-
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
     msg = 'This endpoint is used for POST request and only accepts ' \
         + 'JSON objects. If you are seeing this error, then you either ' \
         + 'did not make a POST request or forgot to send the POST in the ' \
