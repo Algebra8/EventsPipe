@@ -65,4 +65,6 @@ def scrape_events(n_pages: int):
 
 
 if __name__ == '__main__':
-    scrape_events(1)
+    msg = "How many pages of Eventbrite Events would you like to scrape?"
+    pages = input(msg)
+    scrape_events(int(pages))

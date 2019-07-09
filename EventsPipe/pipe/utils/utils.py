@@ -146,7 +146,13 @@ def get_events_by_cost(cost):
                 'error': 'No events match for the given ticket cost.'
             }, status=404)
 
-        events = [json.loads(t.event.description) for t in tickets]
+        # Each Ticket object has multiple sub-events relating to
+        # the same event. Avoid returning duplicates of each event
+        # with the given ticket cost
+        unique_events_id = tickets.values_list('event', flat=True).distinct()
+        unique_events = Event.objects.filter(id__in=unique_events_id)
+
+        events = [json.loads(ue.description) for ue in unique_events]
         # For multiple JSON responses, assign all required events to dict
         N_events = len(tickets)  # number of events for given ticket cost
         events_dict = events_list_to_dict(N_events, events)
