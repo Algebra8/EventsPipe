@@ -111,7 +111,7 @@ def get_events_by_cost(cost):
                 'error': 'No events match for the given ticket cost.'
             }, status=404)
 
-        events = [json.loads(t.event_id.description) for t in tickets]
+        events = [json.loads(t.event.description) for t in tickets]
         # For multiple JSON responses, assign all required events to dict
         N_events = len(tickets)  # number of events for given ticket cost
         events_dict = events_list_to_dict(N_events, events)

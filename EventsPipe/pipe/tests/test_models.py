@@ -127,7 +127,7 @@ class TicketModelTest(TestCase):
         Ticket.objects.create(
             ticket_cost = 1.0,
 
-            event_id = Event.objects.create(
+            event = Event.objects.create(
                 description = "Test Description",
                 name = "Test Name",
                 event_id = "123",
@@ -168,7 +168,7 @@ class TicketModelTest(TestCase):
         """
         ticket = Ticket.objects.get(ticket_cost=1.0)
         with self.assertRaises(ValueError):
-            ticket.event_id = 10
+            ticket.event = 10
             ticket.full_clean()
 
     def test_valid_ticket_cost_0(self):

@@ -27,7 +27,7 @@ class PipeViewGETTest(TestCase):
         event = Event.objects.get(name="Test Name 1")
         Ticket.objects.create(
             ticket_cost = 1.0,
-            event_id = event,
+            event = event,
         )
 
     def test_events_search_list(self):
@@ -124,7 +124,7 @@ class PipeViewPOSTTest(TestCase):
         event = Event.objects.get(name="Test Name")
         Ticket.objects.create(
             ticket_cost = 1.0,
-            event_id = event,
+            event = event,
         )
 
 

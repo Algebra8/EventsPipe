@@ -50,7 +50,7 @@ def populate_tickets_db(ticket_input, event_input):
             cost = float(ticket_input[i]['cost']['major_value'])
 
         ticket.ticket_cost = cost
-        ticket.event_id = event_input
+        ticket.event = event_input
         ticket.save()
 
     print("Tickets database populated with new ticket.")

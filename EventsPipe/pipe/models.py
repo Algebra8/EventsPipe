@@ -36,7 +36,7 @@ class Ticket(models.Model):
         blank=False,
         validators=[tickets_validators.validate_cost,]
     )
-    event_id = models.ForeignKey(
+    event = models.ForeignKey(
         'Event',
         on_delete=models.CASCADE,
         blank=False,
