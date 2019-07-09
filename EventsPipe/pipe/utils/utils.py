@@ -6,7 +6,6 @@ sys.path.append(BASE_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'EventsPipe.settings')
 django.setup()
 
-
 # Django tools
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
@@ -17,14 +16,12 @@ import datetime
 from pipe.models import Event, Ticket
 
 
-
-
-
 def convert_string_to_timezone(date):
     # Convert string to datetime based on %Y-%m-%d
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
     # Convert and return datetime to datetime with timezone
     return timezone.make_aware(date)
+
 
 def events_list_to_dict(N_events, events_list):
     events_dict = dict()
@@ -36,6 +33,7 @@ def events_list_to_dict(N_events, events_list):
             pass
 
     return events_dict
+
 
 def get_events_list():
     try:
@@ -54,6 +52,7 @@ def get_events_list():
         events_dict = events_list_to_dict(N_events, event_descr)
 
         return JsonResponse(events_dict)
+
 
 def get_event_by_name(event_name):
     try:
@@ -88,6 +87,7 @@ def get_event_by_id(eventid):
 def get_events_by_cost(cost):
     try:
         # Tickets contain one or more events
+        # For issues with `filter`, refer to get_by_startdate
         tickets = Ticket.objects.filter(ticket_cost=float(cost))
 
     except Ticket.DoesNotExist:
@@ -96,7 +96,21 @@ def get_events_by_cost(cost):
             'error': f"The given Event with cost {cost} does not exist."
         }, status=404)
 
+    except ValueError:
+        return JsonResponse({
+            'ticket cost': cost,
+            'error': "Ticket cost must be float or integer values."
+        }, status=400)
+
     else:
+        if not tickets:
+            # Return 404 for consistency within API
+            # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+            return JsonResponse({
+                'ticket cost': cost,
+                'error': 'No events match for the given ticket cost.'
+            }, status=404)
+
         events = [json.loads(t.event_id.description) for t in tickets]
         # For multiple JSON responses, assign all required events to dict
         N_events = len(tickets)  # number of events for given ticket cost
@@ -114,6 +128,10 @@ def get_by_startdate(utc_startdate):
         # utc_startdate must be in format %Y-%m-%d
         parsed_sd = convert_string_to_timezone(utc_startdate)
 
+        # `filter` is used instead of `get` since multiple
+        # events can be on a given day.
+        # Note `filter` does not raise 404 if not found,
+        # queryset will be empty.
         events_by_sd = Event.objects.filter(
             start_date__year=parsed_sd.year,
             start_date__month=parsed_sd.month,
@@ -122,6 +140,7 @@ def get_by_startdate(utc_startdate):
 
     except Event.DoesNotExist:
         # Proper date given, Event does not exist
+        # This will not happen with `filter`
         return JsonResponse({
             'event start date': utc_startdate,
             'error': 'The given Event does not exist.'
@@ -136,6 +155,14 @@ def get_by_startdate(utc_startdate):
         }, status=400)
 
     else:
+        if not events_by_sd:
+            # Return 404 for consistency within API
+            # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+            return JsonResponse({
+                'event start date': utc_startdate,
+                'error': 'No events match the given date.'
+            }, status=404)
+
         events = [json.loads(e.description) for e in events_by_sd]
 
         # Convert event descriptions to python dict
