@@ -16,3 +16,9 @@
 7. Ask what criteria they should be able to
     find the event that they want to update by
     i.e. by id or with all the ways from part 1?
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+- Make model fat
+- Add utc timezone to event full_clean
