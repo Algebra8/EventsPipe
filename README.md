@@ -61,7 +61,22 @@ url: `domain_name`/pipe/events/update/<id:eventid>
 
 ##### Date Scraping
 
-In order to populate the database, public events were scraped from the Eventbrite API using the modules `event_scraper.py` and `ticket_scraper.py`. As can be deduced from their names, the former module was used to scrape the required events while the latter was used to scrape data on their respective ticket costs. For more information regarding Eventbrite API's Event and Ticket objects, please refer to their [API Reference](https://www.eventbrite.com/platform/api) page.
+In order to populate the database, public events were scraped from the Eventbrite API using the modules `event_scraper.py` and `ticket_scraper.py`. As can be deduced from their names, the former module was used to scrape the required events while the latter was used to scrape data on their respective ticket costs. The applications database contains above 500 Eventbrite Events and over 2000 references to Eventbrite Ticket objects. For more information regarding Eventbrite API's Event and Ticket objects, please refer to their [API Reference](https://www.eventbrite.com/platform/api) page.
+
+In order to re-populate the database using the `event_scraper` and `ticket_scraper` modules,
+it is necessary to first clear the database and previous migrations, run the
+`event_scraper` module with the desired Eventbrite Event pages to scrape, and finally run
+the `ticket_scraper` module.
+
+```
+>>> # Clear database
+> $ python event_scraper.py
+> How many pages of Eventbrite Events would you like to scrape?
+>>> 3
+> $ python ticket_scraper.py
+```
+
+> Each Eventbrite Event page contains roughly 50 public Events.
 
 ##### Models
 
@@ -112,6 +127,8 @@ Custom model validation was created and can be viewed in the `pipe/validators` d
 ##### Views
 
 The backend controller (in `views.py`) contains two API endpoints. **events/search/** and **events/update/<int:eventid>** are handled by `views.get_event` and `views.update_event`, respectively. The controllers make heavy use of utility functions and middleware, which exist in `pipe/middleware` and `pipe/utils`.
+
+It is worth mentioning that Eventbrite Tickets have an interesting structure. Due to the fact that each Event may have multiple 'sub-events' (such as a Saturday entrance or Sunday entrance at a festival), it is likely that each sub-event has its own ticket cost. Therefore, when searching for an event based on the ticket cost, i.e. with the `ticket_cost` query parameter, it is likely that some of the events returned may be duplicates. This is dealt with by filtering and returning distinct Events when searching by cost. The user can be expected to use this information to then search for the sub-event of their liking, knowing that within that event there exists some sub-event with the wanted ticket price. For more details on filtering and returning distinct events, please refer to the function `pipe.utils.get_events_by_cost`.
 
 ##### Tests
 
