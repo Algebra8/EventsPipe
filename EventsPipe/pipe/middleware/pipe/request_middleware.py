@@ -4,6 +4,10 @@ import json
 
 
 class HeaderValidation:
+    """
+    Middleware function to check for appropriate authentication
+    for POST requests
+    """
     def process_view(self, request, view_func, view_args, view_kwargs):
         msg = "Unauthorized or Bad request."
         exp = "User is unauthorized to access this request or  " \

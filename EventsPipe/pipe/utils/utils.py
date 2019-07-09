@@ -17,6 +17,10 @@ from pipe.models import Event, Ticket
 
 
 def convert_string_to_timezone(date):
+    """
+    Function to convert a string datetime format
+    to a timezone aware datetime.datetime object
+    """
     # Convert string to datetime based on %Y-%m-%d
     date = datetime.datetime.strptime(date, '%Y-%m-%d')
     # Convert and return datetime to datetime with timezone
@@ -24,6 +28,10 @@ def convert_string_to_timezone(date):
 
 
 def events_list_to_dict(N_events, events_list):
+    """
+    Function to conver a list of events to a JSON
+    object, where keys 0-N_events are JSON events
+    """
     events_dict = dict()
     for i in range(N_events):
         if i not in events_dict:
@@ -36,6 +44,13 @@ def events_list_to_dict(N_events, events_list):
 
 
 def get_events_list():
+    """
+    Controller helper function to return
+    JSON list of events or 404
+
+    returns: JSON list of events or 404
+    url: pipe/events/search/
+    """
     try:
         events_dict = dict()
         events = Event.objects.all()
@@ -55,6 +70,13 @@ def get_events_list():
 
 
 def get_event_by_name(event_name):
+    """
+    Controller helper function to return event with
+    given name (event_name) or 404
+
+    returns: JSON event or 404
+    url: pipe/events/search/?event_name=...
+    """
     try:
         ev = Event.objects.get(name=event_name)
 
@@ -70,6 +92,12 @@ def get_event_by_name(event_name):
 
 
 def get_event_by_id(eventid):
+    """
+    Controller helper function to return event with
+    given id (eventid) or 404
+
+    returns: JSON event or 404
+    """
     try:
         ev = Event.objects.get(event_id=int(eventid))
 
@@ -85,6 +113,13 @@ def get_event_by_id(eventid):
 
 
 def get_events_by_cost(cost):
+    """
+    Controller helper function to return event with
+    given ticket cost (cost) or 404
+
+    returns: JSON list of events or 404
+    url: pipe/events/search/?ticket_cost=...
+    """
     try:
         # Tickets contain one or more events
         # For issues with `filter`, refer to get_by_startdate
@@ -121,8 +156,11 @@ def get_events_by_cost(cost):
 
 def get_by_startdate(utc_startdate):
     """
-    `event` is a list containing all the different events for
-    any single start date.
+    Controller helper function to return event with
+    given ticket cost (cost) or 404
+
+    returns: JSON list of events or 404
+    url: pipe/events/search/?start_date=...
     """
     try:
         # utc_startdate must be in format %Y-%m-%d
@@ -163,6 +201,8 @@ def get_by_startdate(utc_startdate):
                 'error': 'No events match the given date.'
             }, status=404)
 
+        # `event` is a list containing all the different events for
+        # any single start date.
         events = [json.loads(e.description) for e in events_by_sd]
 
         # Convert event descriptions to python dict

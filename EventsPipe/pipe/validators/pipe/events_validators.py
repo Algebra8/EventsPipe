@@ -4,6 +4,9 @@ import datetime
 
 
 def validate_id(value):
+    """
+    Event model validator for event_id
+    """
     if type(value) != int:
         raise ValidationError(
             _('%(value)s is not an integer'),
@@ -11,6 +14,9 @@ def validate_id(value):
         )
 
 def validate_startdate(value):
+    """
+    Event model validator for start_date
+    """
     if type(value) == str:
         try:
             datetime.datetime.strptime(value, '%Y-%m-%d')

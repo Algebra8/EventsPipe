@@ -2,6 +2,12 @@ from django.http import JsonResponse
 
 
 def request_validation(request_body, event_dict):
+    """
+    Controller validation to check that the user
+    has given correct keys to update with regards to
+    the actual Eventbrite Event object stored in
+    Event.description
+    """
     # Check for valid keys
     for key, val in request_body.items():
         if key not in event_dict:

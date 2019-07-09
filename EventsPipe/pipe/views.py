@@ -17,10 +17,14 @@ from pipe.utils import utils
 
 
 def index(request):
+    # Tired of Hello Worlds...
     html = "<h1>goobye wordle</h1>"
     return HttpResponse(html)
 
 def get_event(request):
+    """
+    Endpoint for querying Events
+    """
     if request.method == 'GET':
         q = request.GET.dict()
         err_msg = "Please query by only event_name, start_date, ticket_cost " \
@@ -52,6 +56,9 @@ def get_event(request):
 @csrf_exempt
 @decorator_from_middleware(HeaderValidation)
 def update_event(request, eventid):
+    """
+    Endpoint for POST request to update an existing Event
+    """
     if request.method == 'POST':
         # Get Event and convert JSON description to python dict
         try:
