@@ -61,7 +61,7 @@ url: `domain_name`/pipe/events/update/<id:eventid>
 
 ##### Date Scraping
 
-In order to populate the database, public events were scraped from the Eventbrite API using the modules `event_scraper.py` and `ticket_scraper.py`. As can be deduced from their names, the former module was used to scrape the required events while the latter was used to scrape data on their respective ticket costs. The applications database contains above 500 Eventbrite Events and over 2000 references to Eventbrite Ticket objects. For more information regarding Eventbrite API's Event and Ticket objects, please refer to their [API Reference](https://www.eventbrite.com/platform/api) page.
+In order to populate the database, public events were scraped from the Eventbrite API using the modules `event_scraper.py` and `ticket_scraper.py`, both of which have a procedural paradigm. As can be deduced from their names, the former module was used to scrape the required events while the latter was used to scrape data on their respective ticket costs. The applications database contains above 500 Eventbrite Events and over 2000 references to Eventbrite Ticket objects. For more information regarding Eventbrite API's Event and Ticket objects, please refer to their [API Reference](https://www.eventbrite.com/platform/api) page.
 
 In order to re-populate the database using the `event_scraper` and `ticket_scraper` modules,
 it is necessary to first clear the database and previous migrations, run the
@@ -69,7 +69,6 @@ it is necessary to first clear the database and previous migrations, run the
 the `ticket_scraper` module.
 
 ```
->>> # Clear database
 > $ python event_scraper.py
 > How many pages of Eventbrite Events would you like to scrape?
 >>> 3
@@ -142,4 +141,9 @@ A quick rundown of some of the things I would do differently next time:
 
 <ul>
     <li>Make the models fat and the views thin, a good example of which is <a href="https://github.com/django/django/blob/ff6ee5f06c2850f098863d4a747069e10727293e/django/contrib/auth/models.py#L225-404"> this example code</a> of Django's own model's structure. </li>
+
+    <li>
+    Add regex support for searching by event name.
+    </li>
+
 </ul>
