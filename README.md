@@ -9,7 +9,7 @@ The EventsPipe project is a backend application that allows users to query or up
 To query an event, access the API with the domain access and the **events/search** endpoint. No headers or special authorization is required. Events are returned as JSON objects.
 
 ```
-url: domain_name`/pipe/events/search/
+url: https://peaceful-citadel-90640.herokuapp.com/pipe/events/search/
 ```
 
 Given no query parameters, the `search` endpoint will yield a JSON object that contains all of the events that exist in the database.
@@ -51,7 +51,7 @@ width: 100%;"
 This API uses POST requests to update a given event. To update the event, the user is expected to have the appropriate authentication in the form of a header value with the key `x-auth`.
 
 ```
-url: `domain_name`/pipe/events/update/<id:eventid>
+url: https://peaceful-citadel-90640.herokuapp.com/pipe/events/update/<id:eventid>
 
 ```
 
@@ -79,7 +79,7 @@ the `ticket_scraper` module.
 
 ##### Models
 
-This application makes use of Django's in-built SQLite database engine. A breakdown of the modules is given below.
+This application makes use of PostGres SQL database engine. A breakdown of the modules is given below.
 
 <table
   style="font-family: arial, sans-serif;
