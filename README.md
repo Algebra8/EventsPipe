@@ -140,10 +140,15 @@ The `x-auth` token's required value is `GENERIC_AUTH_KEY`.
 A quick rundown of some of the things I would do differently next time:
 
 <ul>
-    <li>Make the models fat and the views thin, a good example of which is <a href="https://github.com/django/django/blob/ff6ee5f06c2850f098863d4a747069e10727293e/django/contrib/auth/models.py#L225-404"> this example code</a> of Django's own model's structure. </li>
+  <li>
+    Make the models fat and the views thin, a good example of which is
+    <a
+      href="https://github.com/django/django/blob/ff6ee5f06c2850f098863d4a747069e10727293e/django/contrib/auth/models.py#L225-404"
+    >
+      this example code</a
+    >
+    of Django's own model's structure.
+  </li>
 
-    <li>
-    Add regex support for searching by event name.
-    </li>
-
+  <li>Add regex support for searching by event name.</li>
 </ul>
