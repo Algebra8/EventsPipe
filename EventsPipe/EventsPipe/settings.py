@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 secret_key = os.getenv("DJANGO_SETTINGS_SECRET_KEY")
 SECRET_KEY = secret_key
+psql_pass = os.getenv("PSQL_PASSWORD")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -76,8 +77,12 @@ WSGI_APPLICATION = 'EventsPipe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'EVENTSPIPE',
+        'USER': 'postgres',
+        'PASSWORD': f"{psql_pass}",
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

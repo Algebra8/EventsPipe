@@ -40,6 +40,7 @@ def populate_events_db(events_input):
         event.name = ev['name']['text']
         event.event_id = ev['id']
         event.start_date = parse_datetime(ev['start']['utc'])
+        event.full_clean()
         event.save()
 
     print("Events database populated with events.")
