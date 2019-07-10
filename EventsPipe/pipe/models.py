@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from .validators.pipe import events_validators
 from .validators.pipe import tickets_validators
-from django.core.validators import MinValueValidator
+# from django.core.validators import MinValueValidator
 
 class Event(models.Model):
     description = models.TextField(blank=False)
@@ -10,10 +10,9 @@ class Event(models.Model):
         max_length=550,
         blank=False,
     )
-    event_id = models.IntegerField(
+    event_id = models.BigIntegerField(
         validators=[
             events_validators.validate_id,
-            MinValueValidator(0),
         ],
         blank=False,
     )
