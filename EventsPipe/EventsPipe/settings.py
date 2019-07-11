@@ -14,7 +14,7 @@ SECRET_KEY = os.getenv("DJANGO_SETTINGS_SECRET_KEY")
 psql_pass = os.getenv("PSQL_PASSWORD")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -124,4 +124,4 @@ STATICFILES_DIRS = [
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Activate Django-Heroku.
-# django_heroku.settings(locals())
+django_heroku.settings(locals())

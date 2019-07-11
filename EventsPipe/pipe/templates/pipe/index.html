@@ -38,6 +38,21 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'index' %}"
+                >Home <span class="sr-only">(current)</span></a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'events' %}">Events</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'tickets' %}">Tickets</a>
+            </li>
+          </ul>
+        </div>
       </nav>
     </header>
     <!-- !HEADER -->
@@ -97,6 +112,28 @@
                 <td>Events with given start dates</td>
               </tr>
             </table>
+
+            <p>
+              Note, when querying by <code>ticket_cost</code>, it may seem that
+              there are duplicate events for different prices. In reality, each
+              event has different pricing depending on the sub-event being
+              attended or the day the event is being attended. For example, the
+              event
+              <strong
+                >Suite Life Fridays At Suite Lounge With Big Tigger</strong
+              >
+              may be 50 USD when attending on Saturday with a normal entrance
+              ticket, while it may be 100 USD when attending the VIP section on
+              Sunday.
+            </p>
+
+            <p>
+              To view the list of all Event IDs and names or Ticket costs,
+              please refer to the <strong class="text-info">Event</strong> and
+              <strong class="text-info">Ticket</strong> tabs above. Please note
+              that the Tickets are not cached, and so the wait time for them to
+              load may be longer than expected.
+            </p>
           </div>
           <div class="container">
             <h3>Update</h3>

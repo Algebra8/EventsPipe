@@ -21,4 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('pipe/', include('pipe.urls')),
     path('', views.index, name="index"),
+    path("events", views.events_html, name="events"),
+    path("tickets", views.tickets_html, name="tickets"),
 ]

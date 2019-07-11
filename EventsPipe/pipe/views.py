@@ -22,6 +22,16 @@ def index(request):
     # html = "<h1>goobye wordle</h1>"
     return render(request, 'pipe/index.html')
 
+def events_html(request):
+    events = Event.objects.all()
+    events_dict = {'events': events}
+    return render(request, 'pipe/events.html', context=events_dict)
+
+def tickets_html(request):
+    tickets = Ticket.objects.all()
+    tickets_dict = {'tickets': tickets}
+    return render(request, 'pipe/tickets.html', context=tickets_dict)
+
 def get_event(request):
     """
     Endpoint for querying Events
