@@ -17,6 +17,7 @@ psql_pass = os.getenv("PSQL_PASSWORD")
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    '127.0.0.1:8000',
     "127.0.0.1",
     "localhost",
     "https://peaceful-citadel-90640.herokuapp.com/",
@@ -127,4 +128,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

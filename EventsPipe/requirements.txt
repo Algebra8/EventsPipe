@@ -3,3 +3,4 @@ gunicorn
 django-heroku
 psycopg2==2.7.5
 requests==2.22.0
+whitenoise
