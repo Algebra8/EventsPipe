@@ -1,6 +1,7 @@
 # Django tools
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.utils.decorators import decorator_from_middleware
@@ -18,8 +19,8 @@ from pipe.utils import utils
 
 def index(request):
     # Tired of Hello Worlds...
-    html = "<h1>goobye wordle</h1>"
-    return HttpResponse(html)
+    # html = "<h1>goobye wordle</h1>"
+    return render(request, 'pipe/index.html')
 
 def get_event(request):
     """

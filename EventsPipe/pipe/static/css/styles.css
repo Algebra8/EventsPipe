@@ -1,3 +1,26 @@
 body {
-  font-family: Roboto;
+  background-color: #6b717e !important;
+  font-family: "Roboto", sans-serif !important;
+}
+
+#jumbo {
+  /* background-color: #ffc4d1 !important; */
+}
+
+#head1 {
+  background-color: #6b717e;
+}
+
+h1 {
+  padding-bottom: 20px;
+}
+
+/* h3 {
+  padding-top: 20px;
+} */
+
+table,
+th,
+td {
+  border: 2px;
 }

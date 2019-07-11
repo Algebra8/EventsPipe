@@ -1,10 +1,12 @@
 <!DOCTYPE html> {% load staticfiles %}
+<!-- {% load staticfiles %} -->
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
     <title>Index-EventsPipe</title>
 
     <link rel="stylesheet" href="{% static "css/styles.css" %}" />
+    <!-- <link rel="stylesheet" href="styles.css" /> -->
 
     <!-- BOOTSTRAP -->
     <link
@@ -20,9 +22,203 @@
     />
   </head>
   <body>
-    <div class="container">
-      <div class="jumbotron text-center"><h1>EventsPipe</h1></div>
-    </div>
+    <!-- HEADER -->
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">EventsPipe</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </nav>
+    </header>
+    <!-- !HEADER -->
+    <main role="main" class="container">
+      <div class="container">
+        <div id="jumbo" class="jumbotron">
+          <div class="container" id="head1">
+            <!-- <h1 class="text-center">EventsPipe</h1> -->
+            <div class="jumbotron text-white" id="head1">
+              <h4>
+                The EventsPipe project is a backend application that allows
+                users to query or update events from a predefined set of
+                Eventbrite events. Queries can be done based on event name,
+                start date, or ticket cost while updates, in the form of POST
+                requests, are accessed with an event's id.
+              </h4>
+            </div>
+          </div>
+
+          <div class="container">
+            <h3>Query</h3>
+            <p>
+              To query an event, access the API with the domain access and the
+              <strong>pipe/events/search</strong> endpoint. No headers or
+              special authorization is required. Events are returned as JSON
+              objects. Given no query parameters, the
+              <strong>search</strong> endpoint will yield a JSON object that
+              contains all of the events that exist in the database. Use query
+              parameters to search for an event. A breakdown of query parameters
+              and their types are given in the table below.
+            </p>
+
+            <table
+              class="table"
+              style="font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;"
+            >
+              <thead>
+                <th class="text-info">keys</th>
+                <th class="text-info">types</th>
+                <th class="text-info">returns</th>
+              </thead>
+              <tr>
+                <td>event_name</td>
+                <td>string</td>
+                <td>Event with given event name</td>
+              </tr>
+              <tr>
+                <td>ticket_cost</td>
+                <td>float or integer</td>
+                <td>Multiple Events with given ticket cost</td>
+              </tr>
+              <tr>
+                <td>start_date</td>
+                <td>string, format: YYYY-MM-DD</td>
+                <td>Events with given start dates</td>
+              </tr>
+            </table>
+          </div>
+          <div class="container">
+            <h3>Update</h3>
+            <p>
+              This API uses POST requests to update a given event. To update the
+              event, the user is expected to have the appropriate authentication
+              in the form of a header value with the key <code>x-auth</code>.
+            </p>
+
+            <table
+              class="table"
+              style="font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;"
+            >
+              <tr>
+                <td class="text-info">POST url:</td>
+                <td>
+                  https://peaceful-citadel-90640.herokuapp.com/pipe/events/update/&ltint:event_id&gt
+                </td>
+              </tr>
+            </table>
+
+            <div class="card">
+              <div class="card-body">
+                <code>x-auth</code> value is <code>GENERIC_AUTH_KEY</code>.
+              </div>
+            </div>
+          </div>
+
+          <div id="jumbo" class="jumbotron">
+            <div class="container" id="head1">
+              <!-- <h1 class="text-center">EventsPipe</h1> -->
+              <div class="jumbotron text-white" id="head1">
+                <h4>Examples</h4>
+              </div>
+            </div>
+            <div class="card">
+              <h5 class="card-header">List of Events</h5>
+              <div class="card-body">
+                <h5 class="card-title"><code>GET</code></h5>
+                <p class="card-text">
+                  https://peaceful-citadel-90640.herokuapp.com/pipe/events/search/
+                </p>
+              </div>
+            </div>
+
+            <div class="card">
+              <h5 class="card-header">Event by name</h5>
+              <div class="card-body">
+                <h5 class="card-title"><code>GET</code></h5>
+                <p class="card-text">
+                  https://peaceful-citadel-90640.herokuapp.com/pipe/events/search/?event_name=Suite
+                  Life Fridays At Suite Lounge With Big Tigger
+                </p>
+              </div>
+            </div>
+
+            <div class="card">
+              <h5 class="card-header">Event by ticket cost</h5>
+              <div class="card-body">
+                <h5 class="card-title"><code>GET</code></h5>
+                <p class="card-text">
+                  https://peaceful-citadel-90640.herokuapp.com/pipe/events/search/?ticket_cost=33.0
+                </p>
+              </div>
+            </div>
+
+            <div class="card">
+              <h5 class="card-header">Event update by id</h5>
+              <div class="card-body">
+                <h5 class="card-title"><code>POST</code></h5>
+                <p class="card-text">
+                  https://peaceful-citadel-90640.herokuapp.com/pipe/events/update/53667810867
+                  <br />
+                  <var>Headers</var> <code>x-auth</code>:
+                  <code>GENERIC_AUTH_KEY</code> <br />
+                  <var>Request Body</var> <code>{'name': 'new name'}</code>
+                </p>
+              </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="container jumbotron">
+              <h3>Requests</h3>
+              <table class="table">
+                <thead>
+                  <th>request</th>
+                  <th>query key</th>
+                  <th>format</th>
+                </thead>
+                <tr>
+                  <td><code>GET</code></td>
+                  <td>event_name</td>
+                  <td>String</td>
+                </tr>
+                <tr>
+                  <td><code>GET</code></td>
+                  <td>ticket_cost</td>
+                  <td>Float, Integer</td>
+                </tr>
+                <tr>
+                  <td><code>GET</code></td>
+                  <td>start_date</td>
+                  <td>String, YYYY-MM-DD</td>
+                </tr>
+                <tr>
+                  <td><code>GET</code></td>
+                  <td>None</td>
+                  <td>List</td>
+                </tr>
+                <tr>
+                  <td><code>POST</code></td>
+                  <td>id</td>
+                  <td>Integer</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
     <!-- JQUERY, BOOTSTRAP -->
     <script
